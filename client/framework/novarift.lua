@@ -1,4 +1,6 @@
 require '@novarift-core.modules.player'
+
+local types = require '@novarift-organizations.shared.config'.types
 local utils = require 'client.utils'
 
 function utils.hasPlayerGotGroup(filter)
@@ -13,15 +15,27 @@ function utils.hasPlayerGotGroup(filter)
 
         if (tableType == 'hash') then
             for name, grade in pairs(filter) do
-                local org = character.organizations[name]
+                if (name == character.citizen_id) then return true end
 
-                if ((org and org.grade >= grade) or name == character.citizen_id) then
-                    return true
+                if (types[name]) then
+                    for _, data in pairs(character.organizations) do
+                        if (data.type == name and data.grade >= grade) then return true end
+                    end
+                else
+                    local data = character.organizations[name]
+
+                    if (data and data.grade >= grade) then return true end
                 end
             end
         elseif (tableType == 'array') then
             for _, name in pairs(filter) do
-                if (character.organizations[name] or character.citizen_id == name) then
+                if (name == character.citizen_id) then return true end
+
+                if (types[name]) then
+                    for _, data in pairs(character.organizations) do
+                        if (data.type == name) then return true end
+                    end
+                elseif (character.organizations[name]) then
                     return true
                 end
             end

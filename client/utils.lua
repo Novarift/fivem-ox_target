@@ -199,6 +199,8 @@ SetTimeout(0, function()
         require 'client.framework.qb'
     elseif utils.hasExport('ND_Core.getPlayer') then
         require 'client.framework.nd'
+    elseif utils.hasExport('novarift-core.GetPlayer') then
+        require 'client.framework.novarift'
     end
 end)
 
